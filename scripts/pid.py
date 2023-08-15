@@ -1,6 +1,9 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# 本範例為使用 PID 控制，讓機器人旋轉 x 度
+# 可以自由調整角度 以達到正確的轉向
+
 import rospy
 import math
 from sensor_msgs.msg import Imu
