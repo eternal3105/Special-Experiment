@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-# this code will stored the first imu data 
-# callback will check the imu data and compare with the first imu data
-# once the robot turn exactly 90 degree, it will print a msg "90990" and stop this node
+# param target_angle: 目標角度
 
 import rospy
 import math
@@ -13,9 +11,14 @@ from geometry_msgs.msg import Twist
 from tf.transformations import euler_from_quaternion
 
 first_imu_data = None
+Kp = 0.05 # 比例增益
+Ki = 0.0 # 積分增益
+Kd = 0.5 # 微分增益
+prev_error = 0
+integral = 0
 
 def imu_callback(msg):
-    global first_imu_data
+    global first_imu_data, prev_error, integral
     quaternion = (
         msg.orientation.x,
         msg.orientation.y,
@@ -23,38 +26,35 @@ def imu_callback(msg):
         msg.orientation.w
     )
     euler = euler_from_quaternion(quaternion)
-    current_yaw = euler[2]
+    current_yaw = math.degrees(euler[2])
 
-    # 儲存第一筆IMU數據
     if first_imu_data is None:
         first_imu_data = current_yaw
         return
 
-    # 檢查與第一筆數據的差異是否正好90度
-    difference = math.degrees(current_yaw - first_imu_data)
-    difference = (difference + 360) % 360  # 確保範圍在0到360度之間
+    error = target_angle - (current_yaw - first_imu_data)
+    error = (error + 360) % 360 - 180 # Normalize to -180 to 180
 
-    if abs(difference - 90) < 1: # 允許1度的誤差
-        print("90990")
+    integral += error
+    derivative = error - prev_error
+
+    # PID 控制
+    angular_z = Kp * error + Ki * integral + Kd * derivative
+
+    twist = Twist()
+    twist.angular.z = angular_z
+    cmd_vel_pub.publish(twist)
+
+    prev_error = error
+
+    if abs(error) < 1: # 允許1度的誤差
         rospy.signal_shutdown('Turned 90 degrees')
 
 if __name__ == '__main__':
     rospy.init_node('imu_subscriber')
+    target_angle = rospy.get_param('~target_angle', 90) # 從ROS參數伺服器獲取目標角度
+
     imu_sub = rospy.Subscriber('/imu', Imu, imu_callback)
     cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 
-    # 設定旋轉速度
-    twist = Twist()
-    twist.angular.z = 0.5 # 設定合適的旋轉速度
-
-    # 每秒發布旋轉命令，直到節點被關閉
-    rate = rospy.Rate(1) # 10 Hz
-    while not rospy.is_shutdown():
-        cmd_vel_pub.publish(twist)
-        rate.sleep()
-
     rospy.spin()
-
-
-
-
