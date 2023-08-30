@@ -11,7 +11,7 @@
   * **接取網頁過來的座標資料並給定參數做導航 goal_assign => get_push.py**
   * **發送地圖資料到伺服器**
   * **scp /home/rosky01/ROSKY/catkin_ws/src/rosky_slam/map/map253.pgm  rosmaster@192.168.0.91:~/inital/img/**
-* **影片**
+* **全景**
   * **目前針對高斯金字塔的層數做差別分析**   
   * **後續也可以針對用影像的幾分之幾來做融合進行分析**
   * **取得網頁傳遞過來的兩個按鈕訊息**
