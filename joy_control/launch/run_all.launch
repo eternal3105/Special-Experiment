@@ -1,0 +1,40 @@
+<launch>
+
+    <node respawn="true" pkg="joy" type="joy_node" name="joy_sensor">
+        <param name="dev" type="string" value="/dev/input/js0" />
+        <param name="deadzone" value="0.12" />
+        <param name="default_trig_val" value="true" />
+        <param name="autorepeat_rate" value="1000" />
+    </node>
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+    <node pkg="joy_control" type="mux" name="mux" output="screen"/>
+    <group ns="rosky">
+        <param name="velocity" value="0.11" />
+        <param name="rotational" value="0.45" />
+        <param name="publish_rate" value="7" />
+        <node pkg="joy_control" type="joy_control" name="joy_control_node" output="screen"/>
+        <node pkg="ydlidar_noise_filter" type="noise_filter" name="noise_filter" output="screen"/>
+        <node pkg="avoidance" type="avoidance" name="avoidance" output="screen"/>
+        <node name="collector" pkg="web_bridge" type="collector" output="screen"/>
+
+
+    </group>
+
+    <group ns="turtlebot">
+        <param name="velocity" value="0.22" />
+        <param name="rotational" value="2.86" />
+        <param name="publish_rate" value="5" />
+        <param name="window_lower_limit" value="17" />
+        <param name="window_lower_limit" value="51" />
+        <param name="negative_gain" value="2" />
+        <param name="positive_gain" value="10" />
+        <node pkg="joy_control" type="joy_control" name="joy_control_node" output="screen"/>
+        <param name="lidar_info_size" value="360"/>
+        <node pkg="ydlidar_noise_filter" type="noise_filter" name="noise_filter" output="screen"/>
+        <node pkg="avoidance" type="avoidance_turtle" name="avoidance_turtle" output="screen"/>
+        <node name="collector" pkg="web_bridge" type="collector" output="screen"/>
+
+
+    </group>
+
+</launch>
