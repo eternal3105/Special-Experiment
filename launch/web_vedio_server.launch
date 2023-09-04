@@ -1,0 +1,22 @@
+<launch>
+
+  <node name="web_video_server" pkg="web_video_server" type="web_video_server" output="screen">
+    <param name="address" value="0.0.0.0" />
+    <param name="port" value ="8080" />
+    <param name="ros_threads" value ="6" />
+    <param name="video_encoder" value="h264" />
+  </node>
+
+  <!-- <node name="stitched_frame_publisher" pkg="showmap" type="calibration.py" output="screen">
+  </node> -->
+
+  <!-- <node name="stitched_frame_publisher" pkg="showmap" type="packet.py" output="screen">
+  </node> -->
+
+  <node name="stitched_frame_publisher" pkg="showmap" type="cali" output="screen">
+  </node>
+
+  <!-- <node name="stitched_frame_publisher" pkg="showmap" type="show_one.py" output="screen">
+  </node> -->
+
+</launch>
