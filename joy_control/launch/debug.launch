@@ -1,0 +1,7 @@
+<launch>
+<param name="machine_name_1" value="rosky" />
+<param name="machine_name_2" value="turtlebot" />
+
+ <!-- Axes -->
+  <node pkg="joy_control" type="mux" name="mux" output="screen" />
+</launch>
