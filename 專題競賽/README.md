@@ -5,3 +5,14 @@
 3. [書面報告 範本](https://lab214b.uk:5001/d/s/v9BLvKjy8b7XUnuaENkzrWE3tYO9kkiX/vo5ojQT2e0ryBk_rheLevmJwsHAD7SNs-QrFAxPN-vAo)
 4. [展示海報 範本](https://lab214b.uk:5001/d/s/v9BOrQz6nhGUiVMY9al1dV3IQSYFCjji/f3CHqookUGy39D96u8hGzxgwP1Jlr5dg-WbHABP1-vAo)
 5. [錄影短片 範本](https://lab214b.uk:5001/d/s/v9GSTUoGgeUNRRGGtTWJY2ruDIFcuOHB/MuPDRuYUtFtW_Si7qb-F8ZqA70fAEPB9-6bJAGYi6vAo)
+
+## Schedule
+11/2 (週四) /2.口頭簡報/初稿
+11/9 (週四) /1. 展示程式及資料/（含展示流程敘述) 完稿
+11/16 (週四) /5.錄影短片/初稿
+分組調查：11/17（五）12:00前
+11/23 (週四)/3.書面報告/ 初稿
+11/30 (週四)  /2.口頭簡報/3.書面報告/ 完稿  ==> 經老師同意方可繳交至系辦
+專題報告繳交期限：12/01（五）17:00前
+12/7 (週四)    /4.展示海報/5.錄影短片/ 完稿
+專題競賽：12/13（三）10:00-16:00
