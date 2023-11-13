@@ -1,0 +1,6 @@
+<launch>
+
+  <node name="call" pkg="signal" type="path2" output="screen"/>
+  <node name="usb" pkg="signal" type="path1" output="screen"/>
+
+</launch>

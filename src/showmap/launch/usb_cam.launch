@@ -1,0 +1,62 @@
+<launch>
+  <node name="web_video_server" pkg="web_video_server" type="web_video_server" output="screen">
+    <param name="address" value="0.0.0.0" />
+    <param name="port" value ="8080" />
+    <param name="video_encoder" value="mjpeg" />
+  </node>
+  
+  <node name="usb_cam_0" pkg="showmap" type="usb_cam"  >
+    <param name="video_device" value="/dev/video0" />
+    <param name="image_width" value="352" />
+    <param name="image_height" value="288" />
+    <param name="fps" value="40" />
+    <!-- <param name="fps" value="20" /> -->
+    <param name="remap_device" value="/camera_4" />
+  </node>
+
+  <node name="usb_cam_1" pkg="showmap" type="usb_cam"  >
+    <param name="video_device" value="/dev/video2" />
+    <param name="image_width" value="352" />
+    <param name="image_height" value="288" />
+    <param name="fps" value="40" />
+    <!-- <param name="fps" value="20" /> -->
+    <param name="remap_device" value="/camera_0" />
+  </node>
+
+  <node name="usb_cam_2" pkg="showmap" type="usb_cam"  >
+    <param name="video_device" value="/dev/video4" />
+    <param name="image_width" value="352" />
+    <param name="image_height" value="288" />
+    <param name="fps" value="40" />
+    <!-- <param name="fps" value="20" /> -->
+    <param name="remap_device" value="/camera_3" />
+  </node>
+
+  <node name="usb_cam_3" pkg="showmap" type="usb_cam"  >
+    <param name="video_device" value="/dev/video6" />
+    <param name="image_width" value="352" />
+    <param name="image_height" value="288" />
+    <param name="fps" value="40" />
+    <!-- <param name="fps" value="20" /> -->
+    <param name="remap_device" value="/camera_5" />
+  </node>
+
+  <node name="usb_cam_4" pkg="showmap" type="usb_cam"  >
+    <param name="video_device" value="/dev/video8" />
+    <param name="image_width" value="352" />
+    <param name="image_height" value="288" />
+    <param name="fps" value="40" />
+    <!-- <param name="fps" value="20" /> -->
+    <param name="remap_device" value="/camera_1" />
+  </node>
+
+  <node name="usb_cam_5" pkg="showmap" type="usb_cam"  >
+    <param name="video_device" value="/dev/video10" />
+    <param name="image_width" value="352" />
+    <param name="image_height" value="288" />
+    <param name="fps" value="40" />
+    <!-- <param name="fps" value="20" /> -->
+    <param name="remap_device" value="/camera_2" />
+  </node>
+  
+</launch>
