@@ -16,7 +16,8 @@ void commandCallback(const std_msgs::String::ConstPtr& msg)
     // 如果收到的命令是 "stop"
     if ( msg->data == "stop" )
     {
-        // 網頁切換到首頁跟地圖
+        // 網頁切換到地圖
+        // 發給server關閉camera
         std_msgs::String pub_msg ;
         pub_msg.data = "stop";
         pub.publish(pub_msg);
@@ -30,6 +31,30 @@ void commandCallback(const std_msgs::String::ConstPtr& msg)
         
         pub.publish(pub_msg);
     } // else if()
+
+    else if ( msg->data == "run" )
+    {
+        // 網頁切換到首頁
+        // 發給server關閉camera
+        std_msgs::String pub_msg ;
+        pub_msg.data = "stop";
+        pub.publish(pub_msg);
+
+        // 發給車子準備開啟runall
+        pub_msg.data = "run" ;
+        pub.publish(pub_msg);
+        return;
+    } // else if
+
+    else if ( msg->data == "navigation" )
+    {
+        // 地圖切換到導航
+        // 發給車子準備開啟runall
+        std_msgs::String pub_msg ;
+        pub_msg.data = "navigation" ;
+        pub.publish(pub_msg);
+        return;
+    } // else if
 
     else {
         // ignore

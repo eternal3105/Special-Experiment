@@ -23,52 +23,94 @@
 4. 如何開導航
 
 */
-
-pid_t current_process_pid = -1;
+pid_t start_process_pid = -1;
+pid_t run_process_pid = -1;
 
 void commandCallback(const std_msgs::String::ConstPtr& msg)
 {
     ROS_INFO("Received command: %s", msg->data.c_str());
 
-    // 如果收到的命令是 "stop"
-    if (msg->data == "stop" && current_process_pid != -1)
+    if (msg->data == "start" && start_process_pid == -1)
     {
-        sleep( 3 ) ;
-        ROS_INFO("Stopping current process.");
-        // 發送 SIGTERM 信號給當前進程
-        kill(current_process_pid, SIGTERM);
-        // 等待子進程終止
-        waitpid(current_process_pid, NULL, 0);
-        current_process_pid = -1;
-    }
-    else if (msg->data == "start" && current_process_pid == -1)
-    {
-        ROS_INFO("Starting new process.");
-        // 使用 fork() 創建一個新進程
+        ROS_INFO("Starting start process.");
         pid_t pid = fork();
-        if (pid == 0) // 子進程
-        {
-
-            // 在子進程中執行指定的 roslaunch 命令
+        if (pid == 0) {
             execlp("roslaunch", "roslaunch", "showmap", "usb_cam.launch", (char *)NULL);
-            // 如果execlp返回，則表明有錯誤發生
             ROS_ERROR("Failed to start roslaunch.");
-            exit(EXIT_FAILURE); // 使用錯誤代碼退出子進程
-        }
-        else if (pid > 0) // 主進程
-        {
-            current_process_pid = pid;
-        }
-        else
-        {
-            // fork 失敗
+            exit(EXIT_FAILURE);
+        } else if (pid > 0) {
+            start_process_pid = pid;
+        } else {
             ROS_ERROR("Fork failed to create new process.");
         }
     }
-    else if (msg->data == "start" && current_process_pid != -1)
+    else if (msg->data == "run" && run_process_pid == -1)
+    { 
+        // runall 不在執行 
+        // 如果start进程正在运行，则先关闭它
+        if (start_process_pid != -1) {
+            sleep(3);
+            ROS_INFO("Stopping start process before running runall.");
+            kill(start_process_pid, SIGTERM);
+            waitpid(start_process_pid, NULL, 0);
+            start_process_pid = -1;
+        } // if
+
+        // 現在執行runall
+        ROS_INFO("Starting runall process.");
+        pid_t pid = fork();
+        if (pid == 0) {
+            execlp("roslaunch", "roslaunch", "/home/rosky01/runall.launch", (char *)NULL);
+            ROS_ERROR("Failed to start roslaunch.");
+            exit(EXIT_FAILURE);
+        } else if (pid > 0) {
+            run_process_pid = pid;
+        } else {
+            ROS_ERROR("Fork failed to create new process.");
+        }
+    }
+    else if ( msg->data == "run" && run_process_pid != -1 )
+    {   // runall 正在執行 回到首頁要關掉start
+
+        // 如果start进程正在运行，關閉
+        ROS_INFO("Closeing the camera.");
+        if (start_process_pid != -1) {
+            sleep(3);
+            ROS_INFO("Stopping start process before running runall.");
+            kill(start_process_pid, SIGTERM);
+            waitpid(start_process_pid, NULL, 0);
+            start_process_pid = -1;
+        } // if
+        // run all 不需要執行
+
+
+    } // else if
+    else if (msg->data == "stop" && start_process_pid != -1)
     {
-        // 如果已有進程在運行，則不允許重複啟動進程
-        ROS_INFO("A process is already running. Cannot start another one.");
+        sleep(3);
+        ROS_INFO("Closeing the camera.");
+        kill(start_process_pid, SIGTERM);
+        waitpid(start_process_pid, NULL, 0);
+        start_process_pid = -1;
+    }
+    else if (msg->data == "navigation" && run_process_pid != -1)
+    {
+        ROS_INFO("Saving the map before stopping runall.");
+        int ret = system("rosrun map_server map_saver -f /home/rosky01/ROSKY/catkin_ws/src/rosky_slam/map/kdMap");
+        if (ret != 0) {
+            // map_saver 执行失败，可以在这里处理错误
+            ROS_ERROR("Failed to save the map.");
+        }
+
+        sleep(3) ;
+        ROS_INFO("Stopping runall and open navigation.");
+        kill(run_process_pid, SIGTERM);
+        waitpid(run_process_pid, NULL, 0);
+        run_process_pid = -1;
+    }
+    else
+    {
+        ROS_INFO("Command ignored: either unknown command or process already running.");
     }
 }
 
@@ -82,4 +124,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
 
